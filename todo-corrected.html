@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .input-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            background-color: #28a745;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #eee;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        li button {
+            background-color: #dc3545;
+            border: none;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        li button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo List</h1>
+        <button id="add">Add task</button>
+        <input id="input-section" type="text" placeholder="Enter your task">
+        <ul id="task-list"></ul>
+        <ul id="marked">
+            <h2>Completed Tasks</h2>
+        </ul>
+        <script>
+            const taskInput = document.querySelector('#input-section');
+            const addTaskButton = document.querySelector('#add');
+            const taskList = document.querySelector('#task-list');
+            const markedList = document.querySelector('#marked');
+
+            const addTask = () => {
+                let userInput = taskInput.value.trim();
+                if (userInput === "") {
+                    return;
+                }
+
+                const li = document.createElement('li');
+
+                // Create checkbox for marking completion
+                const markEd = document.createElement('input');
+                markEd.type = 'checkbox';
+                markEd.name = 'completed';
+
+                // Checkbox event listener to mark task as completed
+                markEd.addEventListener('click', () => {
+                    if (markEd.checked) {
+                        // Create a new list item for the completed task
+                        const completedTask = document.createElement('li');
+                        completedTask.textContent = userInput;
+
+                        // Add delete button for completed tasks
+                        const deleteCompletedButton = document.createElement('button');
+                        deleteCompletedButton.textContent = 'delete';
+                        deleteCompletedButton.addEventListener('click', () => {
+                            completedTask.remove();
+                        });
+
+                        completedTask.appendChild(deleteCompletedButton);
+                        markedList.appendChild(completedTask);
+
+                        // Remove the original task from the task list
+                        li.remove();
+                    }
+                });
+
+                // Label for checkbox
+                let label = document.createElement("label");
+                label.htmlFor = "completed";
+                label.appendChild(document.createTextNode("Completed"));
+                li.appendChild(markEd);
+                li.appendChild(label);
+
+                // Add task text
+                const textNode = document.createTextNode(userInput);
+                li.appendChild(textNode);
+
+                // Delete button for the task
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'delete';
+                deleteButton.addEventListener('click', () => {
+                    li.remove();
+                });
+                li.appendChild(deleteButton);
+
+                // Append task item to task list
+                taskList.appendChild(li);
+                taskInput.value = '';
+            };
+
+            addTaskButton.addEventListener('click', addTask);
+            taskInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addTask();
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>
